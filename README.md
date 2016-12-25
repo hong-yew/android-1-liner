@@ -1,5 +1,5 @@
 # android-1-liner
-Android suffers with a lot of boiler plate codes. This is a collection of Android commonly 
+Android suffers from a lot of boiler plate codes. This is a collection of Android commonly 
 used codes and utilities packaged as a one liner util. 
 
 ## Goals
