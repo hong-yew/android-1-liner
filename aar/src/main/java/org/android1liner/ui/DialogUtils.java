@@ -39,7 +39,7 @@ public class DialogUtils {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         if (message != null) {
             alertDialog.setMessage(message);
-            alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+            alertDialog.setIcon(alertDialog.setIcon(context.getResources().getDrawable(android.R.drawable.ic_dialog_info));
             alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", handler);
             alertDialog.show();
             return alertDialog;
