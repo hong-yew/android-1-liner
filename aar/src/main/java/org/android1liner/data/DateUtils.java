@@ -8,6 +8,11 @@ import java.util.GregorianCalendar;
 
 public class DateUtils {
     private DateUtils() {}
+    public static final String GMTZ = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String HHMM = "hh:mm a";
+    public static final String YYYYMMDD = "yyyy MM dd";
+    public static final String DDMMYYYY = "dd/MM/yyyy";
+    public static final String DDMMYY_HHMM = "dd/MM/yy hh:mm a";
 
     public static boolean isToday(long timeSinceEpoc) {
         return isToday(new Date(timeSinceEpoc));
@@ -52,11 +57,24 @@ public class DateUtils {
     }
 
     public static SimpleDateFormat DDMMYYYY() {
-        return new SimpleDateFormat("dd MMM yyyy");
+        return new SimpleDateFormat(DDMMYYYY);
+    }
+
+    public static SimpleDateFormat GMTZ() {
+        return new SimpleDateFormat(GMTZ);
     }
 
     public static SimpleDateFormat DDMMYY_HHMM() {
-        return new SimpleDateFormat("dd/MM/yy  hh:mm a");
+        return new SimpleDateFormat(DDMMYY_HHMM);
+    }
+
+    public static String formatShortest(Date date) {
+        if (isToday(date)) {
+            return new SimpleDateFormat("h:mm a").format(date);
+        }
+        else {
+            return new SimpleDateFormat("dd/MM/yy h:mm a").format(date);
+        }
     }
 
     /**
