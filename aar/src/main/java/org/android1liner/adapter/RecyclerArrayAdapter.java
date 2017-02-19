@@ -61,6 +61,14 @@ public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<RecyclerArrayA
         this.list =  Arrays.asList(array);
     }
 
+    public RecyclerArrayAdapter(Context context, int layoutId, Class viewHolderClass, List list) {
+        inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.layoutId = layoutId;
+        this.viewHolderClass = viewHolderClass;
+        this.list =  list;
+    }
+
     @Override
     public AbstractViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(layoutId, parent, false);

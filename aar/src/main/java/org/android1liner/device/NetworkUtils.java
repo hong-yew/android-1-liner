@@ -31,7 +31,7 @@ public class NetworkUtils {
         return status;
     }
 
-    public boolean hasActiveConnection() {
+    public static boolean hasActiveConnection() {
         try {
             HttpURLConnection urlc = (HttpURLConnection)
                     (new URL("http://clients3.google.com/generate_204")
