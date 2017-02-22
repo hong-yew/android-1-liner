@@ -10,22 +10,23 @@ used codes and utilities packaged as a one liner util.
 
 ## How to integrate
 
-To include the module as source from the repo:
+The AAR is available in https://jitpack.io/#bubblecrisis/android-1-liner
 
-1. Clone the repo.
-
-2. In your app ```settings.gradle```:
-
+In the root gradle file:
 ```
-include ':app', ':Android1liner'
-project(':Android1liner').projectDir = new File(settingsDir, '../Android1liner/aar')
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
 
-3. In your app ```build.gradle```:
+In the module gradle file:
 
 ```
 dependencies {
-    compile project(":Android1liner")
+    compile 'com.github.bubblecrisis:android-1-liner:-SNAPSHOT'
       :
 ```    
 
