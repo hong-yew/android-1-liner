@@ -71,4 +71,14 @@ public class StringUtils {
         }
         return result;
     }
+    
+    /**
+     * Null safe toString()
+     * @param object
+     * @return
+     */
+    public static String toString(Object object) {
+        return (object == null)? null: object.toString();
+    }
+    
 }
