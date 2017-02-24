@@ -3,7 +3,6 @@ package org.android1liner.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.util.Arrays;
@@ -39,9 +38,8 @@ import java.util.List;
  * both the ViewHolder and the RecyclerAdapter.
  *
  */
-public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerView.Adapter<AbstractViewHolder>{
+public class RecyclerListAdapter<T> extends RecyclerView.Adapter<AbstractViewHolder>{
     private static final String TAG = RecyclerListAdapter.class.getSimpleName();
-    private LayoutInflater inflater;
     private Context context;
     
     // Default to a simple 1 item string
@@ -56,7 +54,6 @@ public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerV
      * @param array
      */
     public RecyclerListAdapter(Context context, T[] array) {
-        inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = Arrays.asList(array);
     }
@@ -68,20 +65,17 @@ public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerV
      * @param list
      */
     public RecyclerListAdapter(Context context, List list) {
-        inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = list;
     }
 
     public RecyclerListAdapter(Context context, Class viewHolderClass, T[] array) {
-        inflater = LayoutInflater.from(context);
         this.context = context;
         this.viewHolderClass = viewHolderClass;
         this.list =  Arrays.asList(array);
     }
 
     public RecyclerListAdapter(Context context, Class viewHolderClass, List list) {
-        inflater = LayoutInflater.from(context);
         this.context = context;
         this.viewHolderClass = viewHolderClass;
         this.list =  list;
