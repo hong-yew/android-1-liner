@@ -1,6 +1,7 @@
 package org.android1liner.adapter;
 
-import android.view.View;
+import android.content.Context;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
@@ -10,8 +11,8 @@ public class StringViewHolder extends AbstractViewHolder<String>
 {
     TextView text;
     
-    public StringViewHolder(View itemView) {
-        super(itemView);
+    public StringViewHolder(Context context, ViewGroup parent) {
+        super(context, parent, android.R.layout.simple_list_item_1);
         text = (TextView) itemView.findViewById(android.R.id.text1);
     }
     

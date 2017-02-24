@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Arrays;
@@ -22,10 +21,9 @@ import java.util.List;
  * });
  * </code>
  *
- * To do a custom view holder and layout, use:
+ * To do a custom view holder, use:
  * <code>
  *  RecyclerListAdapter<String> adapter = new RecyclerListAdapter<>(this,
- *   layoutId,
  *   MyViewHolder.class,
  *   new String[] {
  *       "Person 1",
@@ -33,18 +31,20 @@ import java.util.List;
  *       "Person 3"
  * });
  * </code>
- * The MyViewHolder class MUST extends AbstractViewHolder.
+ * The ViewHolder class MUST extends AbstractViewHolder. Unless you override onCreateViewHolder(),
+ * the ViewHolder MUST also have a Constructor signature ViewHolder(Context, ViewGroup). The
+ * ViewHolder is responsible for inflating its layout.
  *
  * In this approach, you only have to extend the ViewHolder, and not having to extend
- * both the ViewHolder and RecyclerAdapter.
+ * both the ViewHolder and the RecyclerAdapter.
  *
  */
 public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerView.Adapter<AbstractViewHolder>{
+    private static final String TAG = RecyclerListAdapter.class.getSimpleName();
     private LayoutInflater inflater;
     private Context context;
     
     // Default to a simple 1 item string
-    private int layoutId = android.R.layout.simple_list_item_1;
     private Class viewHolderClass = StringViewHolder.class;
     
     private List<T> list;
@@ -73,18 +73,16 @@ public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerV
         this.list = list;
     }
 
-    public RecyclerListAdapter(Context context, int layoutId, Class viewHolderClass, T[] array) {
+    public RecyclerListAdapter(Context context, Class viewHolderClass, T[] array) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-        this.layoutId = layoutId;
         this.viewHolderClass = viewHolderClass;
         this.list =  Arrays.asList(array);
     }
 
-    public RecyclerListAdapter(Context context, int layoutId, Class viewHolderClass, List list) {
+    public RecyclerListAdapter(Context context, Class viewHolderClass, List list) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-        this.layoutId = layoutId;
         this.viewHolderClass = viewHolderClass;
         this.list =  list;
     }
@@ -99,12 +97,15 @@ public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerV
     
     @Override
     public AbstractViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(layoutId, parent, false);
         try {
-            return (AbstractViewHolder) viewHolderClass.getConstructor(View.class).newInstance(view);
+            return (AbstractViewHolder) viewHolderClass.getConstructor(Context.class, ViewGroup.class).newInstance(context, parent);
+        }
+        catch (NoSuchMethodException e) {
+            Log.e(TAG, "onCreateViewHolder(): ViewHolder must have a constructure signature " + viewHolderClass.getSimpleName() + "(Context, ViewGroup)", e);
+            throw new RuntimeException(e);
         }
         catch (Exception e) {
-            Log.e(RecyclerListAdapter.class.getSimpleName(), "onCreateViewHolder(): Error creating " + viewHolderClass.getSimpleName());
+            Log.e(TAG, "onCreateViewHolder(): Error creating ViewHolder", e);
             throw new RuntimeException(e);
         }
     }
