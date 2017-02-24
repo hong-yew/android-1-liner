@@ -6,16 +6,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Create simple array adapter quickly.
+ * Create simple List adapter quickly.
  *
  * <code>
- *  RecyclerArrayAdapter<String> adapter = new RecyclerArrayAdapter<>(this,
+ *  RecyclerListAdapter<String> adapter = new RecyclerListAdapter<>(this,
  *   new String[] {
  *       "Person 1",
  *       "Person 2",
@@ -25,7 +24,7 @@ import java.util.List;
  *
  * To do a custom view holder and layout, use:
  * <code>
- *  RecyclerArrayAdapter<String> adapter = new RecyclerArrayAdapter<>(this,
+ *  RecyclerListAdapter<String> adapter = new RecyclerListAdapter<>(this,
  *   layoutId,
  *   MyViewHolder.class,
  *   new String[] {
@@ -34,26 +33,47 @@ import java.util.List;
  *       "Person 3"
  * });
  * </code>
- * The MyViewHolder class MUST extends RecyclerArrayAdapter.AbstractViewHolder.
+ * The MyViewHolder class MUST extends AbstractViewHolder.
  *
  * In this approach, you only have to extend the ViewHolder, and not having to extend
  * both the ViewHolder and RecyclerAdapter.
  *
  */
-public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<RecyclerArrayAdapter.AbstractViewHolder>{
+public class RecyclerListAdapter<T extends AbstractViewHolder> extends RecyclerView.Adapter<AbstractViewHolder>{
     private LayoutInflater inflater;
     private Context context;
+    
+    // Default to a simple 1 item string
     private int layoutId = android.R.layout.simple_list_item_1;
-    List<T> list;
-    private Class viewHolderClass = SimpleViewHolder.class;
-
-    public RecyclerArrayAdapter(Context context, T[] array) {
+    private Class viewHolderClass = StringViewHolder.class;
+    
+    private List<T> list;
+    
+    /**
+     * Create a list adapter using a defualt StringViewHolder and android.R.layout.simple_list_item_1
+     * for a single string item list.
+     * @param context
+     * @param array
+     */
+    public RecyclerListAdapter(Context context, T[] array) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.list = Arrays.asList(array);
     }
+    
+    /**
+     * Create a list adapter using a defualt StringViewHolder and android.R.layout.simple_list_item_1
+     * for a single string item list.
+     * @param context
+     * @param list
+     */
+    public RecyclerListAdapter(Context context, List list) {
+        inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.list = list;
+    }
 
-    public RecyclerArrayAdapter(Context context, int layoutId, Class viewHolderClass, T[] array) {
+    public RecyclerListAdapter(Context context, int layoutId, Class viewHolderClass, T[] array) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.layoutId = layoutId;
@@ -61,14 +81,22 @@ public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<RecyclerArrayA
         this.list =  Arrays.asList(array);
     }
 
-    public RecyclerArrayAdapter(Context context, int layoutId, Class viewHolderClass, List list) {
+    public RecyclerListAdapter(Context context, int layoutId, Class viewHolderClass, List list) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.layoutId = layoutId;
         this.viewHolderClass = viewHolderClass;
         this.list =  list;
     }
-
+    
+    public List<T> getList() {
+        return list;
+    }
+    
+    public void setList(List<T> list) {
+        this.list = list;
+    }
+    
     @Override
     public AbstractViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(layoutId, parent, false);
@@ -76,45 +104,21 @@ public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<RecyclerArrayA
             return (AbstractViewHolder) viewHolderClass.getConstructor(View.class).newInstance(view);
         }
         catch (Exception e) {
-            Log.e(RecyclerArrayAdapter.class.getSimpleName(), "onCreateViewHolder(): Error creating " + viewHolderClass.getSimpleName());
+            Log.e(RecyclerListAdapter.class.getSimpleName(), "onCreateViewHolder(): Error creating " + viewHolderClass.getSimpleName());
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void onBindViewHolder(AbstractViewHolder holder, int position) {
-        holder.bind(list.get(position));
+        if (list != null) {
+            holder.bind(list.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (list == null) return 0;
         return list.size();
-    }
-
-    public abstract static class AbstractViewHolder<VH> extends RecyclerView.ViewHolder {
-        public AbstractViewHolder(View view) {
-            super(view);
-        }
-
-        public Context getContext() {
-            return itemView.getContext();
-        }
-
-        public abstract void bind(VH item);
-    }
-
-    public static class SimpleViewHolder extends AbstractViewHolder<String>
-    {
-        TextView text;
-
-        public SimpleViewHolder(View itemView) {
-            super(itemView);
-            text = (TextView) itemView.findViewById(android.R.id.text1);
-        }
-
-        @Override
-        public void bind(String item) {
-            text.setText(item.toString());
-        }
     }
 }
