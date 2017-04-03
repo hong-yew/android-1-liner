@@ -16,8 +16,10 @@ public class KeyboardUtils {
 
     public static void dismissKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
-            if (activity != null) {
+        if(imm != null && imm.isAcceptingText()) { // verify if the soft keyboard is open
+            if (activity != null &&
+                activity.getCurrentFocus() != null &&
+                activity.getCurrentFocus().getWindowToken() != null) {
                 imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
             }
         }
